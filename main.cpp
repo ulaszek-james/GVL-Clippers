@@ -48,7 +48,7 @@ using namespace std;
 class Map
 {
 public:
-    unordered_map<pair<string, float> , Player> playerMap; // for grabbing
+    map<pair<string, float> , Player> playerMap; // for grabbing
     vector<Player> stats; // for filtering
     void readFile();
     float blankStat(const string& stat);
