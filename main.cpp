@@ -5,14 +5,13 @@
 #include <string>
 #include <vector>
 #include <chrono>
-using namespace std;
 
 struct Player
 {
-    string _name;
-    string _pos;
+    std::string _name;
+    std::string _pos;
     float _age;
-    string _team;
+    std::string _team;
     float _gSelected;
     float _gStarted;
     float _minsPlayed;
@@ -40,7 +39,7 @@ struct Player
     float _pts;
 
 
-    Player(string name, string pos, float age, string team, float gSelected, float gStarted,
+    Player(std::string name, std::string pos, float age, std::string team, float gSelected, float gStarted,
             float minsPlayed, float fgm, float fga, float fgPct, float threePM, float threePA,
             float threePPct, float twoPM, float twoPA, float twoPPct, float eFG, float ftm, float fta,
             float ftPct, float orb, float drb, float trb, float ast, float stl, float blk,
@@ -65,22 +64,22 @@ public:
         root = nullptr;
     }
     Node* insert(Node* node, const Player& player);
-    vector<Player> getPlayersOnTeam(Node* node, vector<Player> &playersOnTeam, const string& team);
-    Player getPlayer(Node* node, const string& name);
+    std::vector<Player> getPlayersOnTeam(Node* node, std::vector<Player> &playersOnTeam, const std::string& team);
+    Player getPlayer(Node* node, const std::string& name);
 };
 
 class Map
 {
 public:
-    map<string, Player> playerMap; // for grabbing
+    std::map<std::string, Player> playerMap; // for grabbing
     void readFile();
-    float blankStat(const string &stat);
-    vector<Player> getTeam(const string &name);
-    Player getPlayer(const string &name);
+    float blankStat(const std::string &stat);
+    std::vector<Player> getTeam(const std::string &name);
+    Player getPlayer(const std::string &name);
 };
 
 BST readPlayers(BST tree);
-float blankStat(const string& stat);
+float blankStat(const std::string& stat);
 
 int main()
 {
@@ -92,24 +91,24 @@ int main()
 
 BST readPlayers(BST tree)
 {
-    ifstream file("2019-20_nba_player_stats.csv");
-    string lineFromFile;
+    std::ifstream file("2019-20_nba_player_stats.csv");
+    std::string lineFromFile;
     getline(file, lineFromFile);
     while (getline(file, lineFromFile))
     {
-        istringstream streamFromAString(lineFromFile);
+        std::istringstream streamFromAString(lineFromFile);
 
-        string name;
+        std::string name;
         getline(streamFromAString, name, ',');
 
-        string pos;
+        std::string pos;
         getline(streamFromAString, pos, ',');
 
-        string temp;
+        std::string temp;
         getline(streamFromAString, temp, ',');
         float age = blankStat(temp);
 
-        string team;
+        std::string team;
         getline(streamFromAString, team, ',');
 
         getline(streamFromAString, temp, ',');
@@ -198,7 +197,7 @@ BST readPlayers(BST tree)
     return tree;
 }
 
-float blankStat(const string& stat)
+float blankStat(const std::string& stat)
 {
     float num;
     if (stat.empty() || stat == "\r")
@@ -210,7 +209,7 @@ float blankStat(const string& stat)
     return num;
 }
 
-Player::Player(string name, string pos, float age, string team, float gSelected,
+Player::Player(std::string name, std::string pos, float age, std::string team, float gSelected,
         float gStarted, float minsPlayed, float fgm, float fga, float fgPct,
         float threePM, float threePA, float threePPct, float twoPM, float twoPA,
         float twoPPct, float eFG, float ftm, float fta, float ftPct, float orb,
@@ -260,7 +259,7 @@ Node* BST::insert(Node *node, const Player& player)
     return node;
 }
 
-vector<Player> BST::getPlayersOnTeam(Node* node, vector<Player> &playersOnTeam, const string& team)
+std::vector<Player> BST::getPlayersOnTeam(Node* node, std::vector<Player> &playersOnTeam, const std::string& team)
 {
     if (node == nullptr)
         ;
@@ -275,7 +274,7 @@ vector<Player> BST::getPlayersOnTeam(Node* node, vector<Player> &playersOnTeam, 
     return playersOnTeam;
 }
 
-Player BST::getPlayer(Node *node, const string& name)
+Player BST::getPlayer(Node *node, const std::string& name)
 {
     if (node->player._name == name)
         return node->player;
@@ -287,24 +286,24 @@ Player BST::getPlayer(Node *node, const string& name)
 
 void Map::readFile()
 {
-    ifstream file("2019-20_nba_player_stats.csv");
-    string lineFromFile;
+    std::ifstream file("2019-20_nba_player_stats.csv");
+    std::string lineFromFile;
     getline(file, lineFromFile);
     while (getline(file, lineFromFile))
     {
-        istringstream streamFromAString(lineFromFile);
+        std::istringstream streamFromAString(lineFromFile);
 
-        string name;
+        std::string name;
         getline(streamFromAString, name, ',');
 
-        string pos;
+        std::string pos;
         getline(streamFromAString, pos, ',');
 
-        string temp;
+        std::string temp;
         getline(streamFromAString, temp, ',');
         float age = blankStat(temp);
 
-        string team;
+        std::string team;
         getline(streamFromAString, team, ',');
 
         getline(streamFromAString, temp, ',');
@@ -392,7 +391,7 @@ void Map::readFile()
     }
 }
 
-float Map::blankStat(const string& stat)
+float Map::blankStat(const std::string& stat)
 {
     float num;
     if (stat.empty())
@@ -404,9 +403,9 @@ float Map::blankStat(const string& stat)
     return num;
 }
 
-vector<Player> Map::getTeam(const string& name)
+std::vector<Player> Map::getTeam(const std::string& name)
 {
-    vector<Player> results;
+    std::vector<Player> results;
 
     for (auto iter = playerMap.begin(); iter != playerMap.end(); iter++)
     {
@@ -418,7 +417,7 @@ vector<Player> Map::getTeam(const string& name)
 
 }
 
-Player Map::getPlayer(const string& name)
+Player Map::getPlayer(const std::string& name)
 {
     return playerMap.at(name);
 }
