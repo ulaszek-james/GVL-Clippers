@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <chrono>
 using namespace std;
 
 struct Player
@@ -37,14 +38,13 @@ struct Player
     float _tov;
     float _pf;
     float _pts;
-    float _year;
 
 
     Player(string name, string pos, float age, string team, float gSelected, float gStarted,
             float minsPlayed, float fgm, float fga, float fgPct, float threePM, float threePA,
             float threePPct, float twoPM, float twoPA, float twoPPct, float eFG, float ftm, float fta,
             float ftPct, float orb, float drb, float trb, float ast, float stl, float blk,
-            float tov, float pf, float pts, float year);
+            float tov, float pf, float pts);
 };
 
 struct Node
@@ -65,6 +65,18 @@ public:
         root = nullptr;
     }
     Node* insert(Node* node, const Player& player);
+    vector<Player> getPlayersOnTeam(Node* node, vector<Player> &playersOnTeam, const string& team);
+    Player getPlayer(Node* node, const string& name);
+};
+
+class Map
+{
+public:
+    map<string, Player> playerMap; // for grabbing
+    void readFile();
+    float blankStat(const string &stat);
+    vector<Player> getTeam(const string &name);
+    Player getPlayer(const string &name);
 };
 
 BST readPlayers(BST tree);
@@ -75,19 +87,12 @@ int main()
     BST tree;
     tree = readPlayers(tree);
 
-    int option;
-    cin >> option;
-    if (option == 1)
-    {
-
-    }
-
     return 0;
 }
 
 BST readPlayers(BST tree)
 {
-    ifstream file("2014-2019_nba_player_stats.csv");
+    ifstream file("2019-20_nba_player_stats.csv");
     string lineFromFile;
     getline(file, lineFromFile);
     while (getline(file, lineFromFile))
@@ -179,17 +184,14 @@ BST readPlayers(BST tree)
         getline(streamFromAString, temp, ',');
         float pf = blankStat(temp);
 
-        getline(streamFromAString, temp, ',');
-        float pts = blankStat(temp);
-
         getline(streamFromAString, temp);
-        float year = blankStat(temp);
+        float pts = blankStat(temp);
 
         Player player(name, pos,  age, team,  gSelected,  gStarted,
                  minsPlayed,  fgm,  fga,  fgPct,  threePM,  threePA,
                  threePPct,  twoPM,  twoPA,  twoPPct,  eFG,  ftm,  fta,
                  ftPct,  orb,  drb,  trb,  ast,  stl,  blk,
-                 tov,  pf,  pts,  year);
+                 tov,  pf,  pts);
 
         tree.root = tree.insert(tree.root, player);
     }
@@ -213,7 +215,7 @@ Player::Player(string name, string pos, float age, string team, float gSelected,
         float threePM, float threePA, float threePPct, float twoPM, float twoPA,
         float twoPPct, float eFG, float ftm, float fta, float ftPct, float orb,
         float drb, float trb, float ast, float stl, float blk, float tov, float pf,
-        float pts, float year)
+        float pts)
 {
     _name = name;
     _pos = pos;
@@ -244,7 +246,6 @@ Player::Player(string name, string pos, float age, string team, float gSelected,
     _tov = tov;
     _pf = pf;
     _pts = pts;
-    _year = year;
 }
 
 Node* BST::insert(Node *node, const Player& player)
@@ -259,3 +260,165 @@ Node* BST::insert(Node *node, const Player& player)
     return node;
 }
 
+vector<Player> BST::getPlayersOnTeam(Node* node, vector<Player> &playersOnTeam, const string& team)
+{
+    if (node == nullptr)
+        ;
+    else
+    {
+        getPlayersOnTeam(node->left, playersOnTeam, team);
+        if (node->player._team == team)
+            playersOnTeam.push_back(node->player);
+        getPlayersOnTeam(node->right, playersOnTeam, team);
+    }
+
+    return playersOnTeam;
+}
+
+Player BST::getPlayer(Node *node, const string& name)
+{
+    if (node->player._name == name)
+        return node->player;
+    else if (name < node->player._name)
+        return getPlayer(node->left, name);
+    else
+        return getPlayer(node->right, name);
+}
+
+void Map::readFile()
+{
+    ifstream file("2019-20_nba_player_stats.csv");
+    string lineFromFile;
+    getline(file, lineFromFile);
+    while (getline(file, lineFromFile))
+    {
+        istringstream streamFromAString(lineFromFile);
+
+        string name;
+        getline(streamFromAString, name, ',');
+
+        string pos;
+        getline(streamFromAString, pos, ',');
+
+        string temp;
+        getline(streamFromAString, temp, ',');
+        float age = blankStat(temp);
+
+        string team;
+        getline(streamFromAString, team, ',');
+
+        getline(streamFromAString, temp, ',');
+        float gSelected = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float gStarted = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float minsPlayed = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float fgm = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float fga = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float fgPct = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float threePM = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float threePA = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float threePPct = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float twoPM = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float twoPA = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float twoPPct = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float eFG = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float ftm = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float fta = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float ftPct = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float orb = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float drb = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float trb = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float ast = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float stl = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float blk = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float tov = blankStat(temp);
+
+        getline(streamFromAString, temp, ',');
+        float pf = blankStat(temp);
+
+        getline(streamFromAString, temp);
+        float pts = blankStat(temp);
+
+        Player player(name, pos,  age, team,  gSelected,  gStarted,
+                      minsPlayed,  fgm,  fga,  fgPct,  threePM,  threePA,
+                      threePPct,  twoPM,  twoPA,  twoPPct,  eFG,  ftm,  fta,
+                      ftPct,  orb,  drb,  trb,  ast,  stl,  blk,
+                      tov,  pf,  pts);
+
+        playerMap.emplace(name, player);
+    }
+}
+
+float Map::blankStat(const string& stat)
+{
+    float num;
+    if (stat.empty())
+    {
+        return 0.0f;
+    }
+    else
+        num = stof(stat);
+    return num;
+}
+
+vector<Player> Map::getTeam(const string& name)
+{
+    vector<Player> results;
+
+    for (auto iter = playerMap.begin(); iter != playerMap.end(); iter++)
+    {
+        if (iter->second._team == name)
+            results.push_back(iter->second);
+    }
+
+    return results;
+
+}
+
+Player Map::getPlayer(const string& name)
+{
+    return playerMap.at(name);
+}
