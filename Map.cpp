@@ -1,5 +1,5 @@
 #include "Map.h"
-
+// Rocco is editing the values for the hot/cold zone drew, just to lyk
 
 Player::Player(std::string name, std::string pos, float age, std::string team, float gSelected,
         float gStarted, float minsPlayed, float fgm, float fga, float fgPct,
