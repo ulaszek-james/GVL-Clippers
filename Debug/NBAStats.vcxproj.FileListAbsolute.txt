@@ -1,0 +1,3 @@
+C:\Users\Andrew\source\repos\NBAStats\NBAStats\Debug\NBAStats.vcxprojAssemblyReference.cache
+C:\Users\Andrew\source\repos\NBAStats\NBAStats\Debug\NBAStats.MyForm.resources
+C:\Users\Andrew\source\repos\NBAStats\NBAStats\Debug\NBAStats.vcxproj.GenerateResource.cache
